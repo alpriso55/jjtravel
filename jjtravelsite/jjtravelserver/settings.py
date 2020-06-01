@@ -32,9 +32,15 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'grps.apps.GrpsConfig',
+    'people.apps.PeopleConfig',
+    'sites.apps.SitesConfig',
+    'hotels.apps.HotelsConfig',
+    'restaurants.apps.RestaurantsConfig',
+    'django.contrib.contenttypes',
+    'grappelli.dashboard',
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -51,12 +57,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'jjtravel.urls'
+ROOT_URLCONF = 'jjtravelserver.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'jjtravel.wsgi.application'
+WSGI_APPLICATION = 'jjtravelserver.wsgi.application'
 
 
 # Database
@@ -124,3 +130,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'grps/static')
+
+GRAPPELLI_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
+# Alternative method
+# GRAPPELLI_INDEX_DASHBOARD = {  
+#     'jjtravelsite.admin.admin_site': 'dashboard.CustomIndexDashboard',
+# }

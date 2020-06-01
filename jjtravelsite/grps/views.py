@@ -3,6 +3,6 @@ from django.http import Http404, HttpResponse
 
 # Create your views here.
 def index(request):
-    return HttpResponse('<h2>The World is mine!</h2>')
+    return HttpResponse('<h2>Groups Index Page</h2>')
 
 

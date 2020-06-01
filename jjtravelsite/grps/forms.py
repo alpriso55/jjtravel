@@ -1,8 +1,14 @@
 from django import forms
 from django.contrib.postgres.forms import SplitArrayField
-from .models import (JobPosition, Restaurant, GroupDetail, RestaurantMenu,
-                     Hotel, HotelReservation, HotelRoomReservation,
-                     Site, SiteVisit)
+
+from .models import (GroupName, GroupDetail,)
+
+from people.models import Person
+
+'''
+class JobPositionForm(forms.ModelForm):
+    title = forms.CharField(max_length=50, strip=True)
+    description = forms.CharField(max_length=200, strip=True)
 
 
 class PersonForm(forms.ModelForm):
@@ -18,8 +24,8 @@ class PersonForm(forms.ModelForm):
                                           empty_label=None)
     extra_notes = SplitArrayField(forms.CharField(max_length=100, strip=True),
                                   size=5, remove_trailing_nulls=True)
-
-
+'''
+'''
 class RestaurantForm(forms.ModelForm):
     name = forms.CharField(max_length=50, strip=True)
     city = forms.CharField(max_length=50, strip=True)
@@ -77,8 +83,27 @@ class RestaurantReservationForm(forms.ModelForm):
 
     extra_notes = SplitArrayField(forms.CharField(max_length=100, strip=True),
                                   size=5, remove_trailing_nulls=True)
+'''
+
+class GroupNameForm(forms.ModelForm):
+    class Meta:
+        model = GroupName
+        fields = ['departure_date', 'name']
 
 
+class GroupDetailForm(forms.ModelForm):
+    group_name = forms.ModelChoiceField(queryset=GroupName.objects.all(),
+                                        empty_label="(Choose Group)")
+    tour_guide = forms.ModelChoiceField(queryset=Person.objects.all(),
+                                        empty_label='(Choose Person)')
+    pax = forms.IntegerField(max_value=100, help_text='Total PAX including Tour Leader')
+    is_tour_leader = forms.BooleanField(required=True, label='Tour Leader')
+    extra_notes = SplitArrayField(forms.CharField(max_length=100, strip=True),
+                                  size=5, remove_trailing_nulls=True)
+
+
+
+'''
 class HotelForm(forms.ModelForm):
     """ This is another way for defining a Form based on a Model """
     # class Meta:
@@ -134,8 +159,8 @@ class HotelRoomReservationForm(forms.ModelForm):
         model = HotelRoomReservation
         fields = ['hotel_reservation', 'room_type', 'meal_plan', 'staying_date',
                   'rate_per_room', 'quantity', 'extra_notes']
-
-
+'''
+'''
 class SiteForm(forms.ModelForm):
     class Meta:
         model = Site
@@ -148,3 +173,4 @@ class SiteVisitForm(forms.ModelForm):
         fields = ['site', 'group', 'date', 'arrival_time', 'departure_time',
                   'transportation_mean', 'entrance_fee', 'participating_clients',
                   'extra_notes']
+'''

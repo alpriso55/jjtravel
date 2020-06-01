@@ -3,7 +3,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from datetime import date
 
+from people.models import (Person, JobPosition,)
 
+'''
 class JobPosition(models.Model):
     title = models.CharField(max_length=50, default='Tour Guide', verbose_name='Title')
     description = models.CharField(max_length=200, null=True, verbose_name='Description')
@@ -12,6 +14,8 @@ class JobPosition(models.Model):
 
     class Meta:
         ordering = ['title']
+        verbose_name = 'Job Position'
+        verbose_name_plural = 'Job Positions'
 
     def __str__(self):
         return self.name
@@ -43,11 +47,13 @@ class Person(models.Model):
 
     class Meta:
         ordering = ['lastname']
+        verbose_name = 'Person'
+        verbose_name_plural = 'People'
 
     def __str__(self):
         return self.fullname
-
-
+'''
+'''
 class Restaurant(models.Model):
     name = models.CharField(max_length=50, verbose_name='Name')
     city = models.CharField(max_length=50, verbose_name='City')
@@ -70,6 +76,8 @@ class Restaurant(models.Model):
 
     class Meta:
         ordering = ['city']
+        verbose_name = 'Restaurant'
+        verbose_name_plural = 'Restaurants'
 
     def __str__(self):
         return self.fullname
@@ -113,53 +121,11 @@ class RestaurantMenu(models.Model):
 
     class Meta:
         ordering = ['restaurant']
+        verbose_name = 'Restaurant Menu'
+        verbose_name_plural = 'Restaurant Menus'
 
     def __str__(self):
         return self.full_name
-
-
-class GroupName(models.Model):
-    departure_date = models.DateField(default=date.today,
-                                      verbose_name='Departure Date',
-                                      help_text='Date mentioned in the request email')
-    name = models.CharField(max_length=50,
-                            verbose_name='Name',
-                            help_text='Name mentioned in the request email')
-
-    @property
-    def full_name(self):
-        # return self.departure_date.strftime("%Y%m%d") + self.name
-        return self.departure_date.strftime("%Y%m%d") + self.name
-
-    def __str__(self):
-        return self.full_name
-
-
-class GroupDetail(models.Model):
-    group_name = models.OneToOneField(GroupName,
-                                      on_delete=models.CASCADE,
-                                      primary_key=True,
-                                      verbose_name='Group Name')
-    tour_guide = models.ForeignKey(Person,
-                                   null=True,
-                                   on_delete=models.CASCADE,
-                                   verbose_name='Tour Guide')
-    pax = models.PositiveSmallIntegerField(null=True)
-    is_tour_leader = models.BooleanField(default=True)                                  
-
-    # GroupDetail.restaurant_reservation_set()
-    # GroupDetail.hotel_reservation_set()
-    # GroupDetail.site_visit_set()
-
-    # @property
-    # def group_name_to_string(self):
-    #     return self.group_name.full_name
-
-    class Meta:
-        ordering = ['group_name']
-
-    def __str__(self):
-        return self.group_name.full_name
 
 
 class RestaurantReservation(models.Model):
@@ -194,11 +160,69 @@ class RestaurantReservation(models.Model):
 
     class Meta:
         ordering = ['group']
+        verbose_name = 'Restaurant Reservation'
+        verbose_name_plural = 'Restaurant Reservations'
 
     def __str__(self):
         return f'Reservation at {self.restaurant_menu.restaurant} for {self.group}'
+'''
+
+class GroupName(models.Model):
+    departure_date = models.DateField(default=date.today,
+                                      verbose_name='Departure Date',
+                                      help_text='Date mentioned in the request email')
+    name = models.CharField(max_length=50,
+                            verbose_name='Name',
+                            help_text='Name mentioned in the request email')
+
+    @property
+    def full_name(self):
+        # return self.departure_date.strftime("%Y%m%d") + self.name
+        return self.departure_date.strftime("%Y%m%d") + self.name
+
+    class Meta:
+        ordering = ['departure_date']
+        verbose_name = 'Group Name'
+        verbose_name_plural = 'Group Names'
+    
+    def __str__(self):
+        return self.full_name
 
 
+class GroupDetail(models.Model):
+    group_name = models.OneToOneField(GroupName,
+                                      on_delete=models.CASCADE,
+                                      primary_key=True,
+                                      verbose_name='Group Name')
+    tour_guide = models.ForeignKey(Person,
+                                   null=True,
+                                   on_delete=models.CASCADE,
+                                   verbose_name='Tour Guide')
+    pax = models.PositiveSmallIntegerField(null=True)
+    is_tour_leader = models.BooleanField(default=True)
+
+    extra_notes = ArrayField(models.CharField(max_length=100, blank=True),
+                             size=5, default=list, blank=True, verbose_name='Extra Notes')                                 
+
+    # GroupDetail.restaurant_reservation_set()
+    # GroupDetail.hotel_reservation_set()
+    # GroupDetail.site_visit_set()
+
+    # @property
+    # def group_name_to_string(self):
+    #     return self.group_name.full_name
+
+    class Meta:
+        ordering = ['group_name']
+        verbose_name = 'Group Detail'
+        verbose_name_plural = 'Group Details'
+
+    def __str__(self):
+        return self.group_name.full_name
+
+
+
+'''
 class Hotel(models.Model):
     name = models.CharField(max_length=50, verbose_name='Name')
     city = models.CharField(max_length=50, verbose_name='City')
@@ -231,6 +255,8 @@ class Hotel(models.Model):
 
     class Meta:
         ordering = ['city', 'stars']
+        verbose_name = 'Hotel'
+        verbose_name_plural = 'Hotels'
 
     def __str__(self):
         return self.fullname
@@ -259,6 +285,8 @@ class HotelReservation(models.Model):
 
     class Meta:
         ordering = ['group', 'hotel']
+        verbose_name = 'Hotel Reservation'
+        verbose_name_plural = 'Hotel Reservations'
 
     def __str__(self):
         return self.fullname
@@ -288,6 +316,8 @@ class HotelDeposit(models.Model):
 
     class Meta:
         ordering = ['deposit_date']
+        verbose_name = 'Hotel Deposit'
+        verbose_name_plural = 'Hotel Deposits'
 
     def __str__(self):
         return self.fullname
@@ -341,11 +371,13 @@ class HotelRoomReservation(models.Model):
 
     class Meta:
         ordering = ['hotel_reservation']
+        verbose_name = 'Hotel Room Reservation'
+        verbose_name_plural = 'Hotel Room Reservations'
 
     def __str__(self):
         return f"Reservation: {self.quantity} {self.room_type}(s) {self.meal_plan}"
-
-
+'''
+'''
 class Site(models.Model):
     name = models.CharField(max_length=100,
                             verbose_name='Name',
@@ -354,12 +386,16 @@ class Site(models.Model):
                             verbose_name='City',
                             help_text='Main city where the site is located')
 
+    # Site.site_visit_set()
+
     @property
     def full_name(self):
         return f'{self.name} ({self.city})'
 
     class Meta:
         ordering = ['city', 'name']
+        verbose_name = 'Site'
+        verbose_name_plural = 'Sites'
 
     def __str__(self):
         return self.full_name
@@ -409,6 +445,9 @@ class SiteVisit(models.Model):
 
     class Meta:
         ordering = ['site', 'date']
+        verbose_name = 'Site Visit'
+        verbose_name_plural = 'Site Visits'
 
     def __str__(self):
         return self.full_name
+'''

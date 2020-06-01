@@ -3,6 +3,6 @@
     "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,
     "python.linting.flake8Enabled": true,
-    "cornflakes.linter.executablePath": "D:\\WebDevelopment\\jjtravel\\env\\Scripts\\flake8.exe",
+    "cornflakes.linter.executablePath": "C:\\Users\\porto\\GitHub\\jjtravel\\env\\Scripts\\flake8.exe",
     "python.languageServer": "Jedi"
 }
